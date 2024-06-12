@@ -8,10 +8,11 @@ Welcome to The Bookshelf Nook! This application allows users to search for book 
 
 # Usage
  <h3>Searching for Books</h3>
-  * Use the search bar on the homepage to search for book titles.
-  * The results will display book information retrieved from the Google Books API.
+  1. Use the search bar on the homepage to search for book titles. 
+  <br/>
+  2.The results will display book information retrieved from the Google Books API.
   <h3>Adding Books to Your Library</h3>
-  * Click on the "Add to Library" button next to a book in the search results.
-  * The book will be added to your personal library.
+  1. Click on the "Add to Library" button next to a book in the search results. <br/>
+  2. The book will be added to your personal library.
   <h3>Viewing Your Library</h3>
-  * Navigate to the "Library" page to view all the books you have added.
+  1. Navigate to the "Library" page to view all the books you have added.
