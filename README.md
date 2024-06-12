@@ -1,12 +1,12 @@
 # <h2>The Bookshelf Nook</h2>
 Welcome to The Bookshelf Nook! This application allows users to search for book titles using the Google Books API and add their favorite books to a personal library. The front end is built with React and styled using Tailwind CSS.
 
-#Features
+# Features
 * Search Books: Users can search for books by title using the Google Books API.
 * Add to Library: Users can add books to their personal library.
 * View Library: Users can view the books they have added to their library.
 
-#Usage
+# Usage
  <h3>Searching for Books</h3>
   * Use the search bar on the homepage to search for book titles.
   * The results will display book information retrieved from the Google Books API.
