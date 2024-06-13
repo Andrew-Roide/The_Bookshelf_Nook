@@ -1,35 +1,35 @@
-import { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BookInfo } from './BookInfo';
+import NavBar from './NavBar';
+import HomePage from './HomePage';
+import SearchResults from './SearchResults';
+import SavedBooks from './SavedBooks';
 import './App.css';
 
 export default function App() {
-  const [serverData, setServerData] = useState('');
+  const [savedBooks, setSavedBooks] = useState<BookInfo[]>([]);
 
-  useEffect(() => {
-    async function readServerData() {
-      const resp = await fetch('/api/hello');
-      const data = await resp.json();
-
-      console.log('Data from server:', data);
-
-      setServerData(data.message);
-    }
-
-    readServerData();
-  }, []);
+  const addBookToLibrary = (book: BookInfo) => {
+    setSavedBooks((prevBooks) => [...prevBooks, book]);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>{serverData}</h1>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/search-results"
+            element={<SearchResults addBookToLibrary={addBookToLibrary} />}
+          />
+          <Route
+            path="/saved-books"
+            element={<SavedBooks savedBooks={savedBooks} />}
+          />
+        </Routes>
+      </Router>
     </>
   );
 }
