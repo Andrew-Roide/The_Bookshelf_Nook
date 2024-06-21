@@ -1,14 +1,20 @@
-import { BookInfo } from './BookInfo';
+import { BookInfo } from '../../shared/BookInfo';
 import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { addBook } from './data';
 
-type SearchResultsProps = {
-  addBookToLibrary: (book: BookInfo) => void;
-};
-export default function SearchResults({
-  addBookToLibrary,
-}: SearchResultsProps) {
+export default function SearchResults() {
+  const [error, setError] = useState<string | null>(null);
   const location = useLocation();
   const books = location.state?.books as BookInfo[];
+
+  async function handleAddBook(book: BookInfo) {
+    try {
+      await addBook(book);
+    } catch (error) {
+      setError('Failed to add book to library');
+    }
+  }
   return (
     <>
       <div>
@@ -35,7 +41,7 @@ export default function SearchResults({
                 <div className="add-book-btn-container">
                   <button
                     className="add-book-btn"
-                    onClick={() => addBookToLibrary(book)}>
+                    onClick={() => handleAddBook(book)}>
                     Add Book
                   </button>
                 </div>
@@ -45,6 +51,7 @@ export default function SearchResults({
             <p>No results found.</p>
           )}
         </div>
+        {error && <p>{error}</p>}
       </div>
     </>
   );

@@ -1,39 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookInfo } from './BookInfo';
+import { fetchBookInfo } from './data';
 
 export default function HomePage() {
   const [query, setQuery] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  async function fetchBooks(query: string) {
+  async function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
     try {
-      const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${query}`
-      );
-      const data = await response.json();
-      const booksData: BookInfo[] = data.items.map((item: any) => ({
-        bookImage:
-          item.volumeInfo.imageLinks?.thumbnail || 'Title not available',
-        bookTitle: item.volumeInfo.title,
-        bookAuthor:
-          item.volumeInfo.authors?.join(', ') || 'Author not available',
-        numOfPages:
-          item.volumeInfo.pageCount || 'Number of pages not available',
-        ISBN:
-          item.volumeInfo.industryIdentifiers?.find(
-            (identifier: any) => identifier.type === 'ISBN_13'
-          )?.identifier || 'Identifier not available',
-      }));
+      const booksData = await fetchBookInfo(query);
+      setError(null);
       navigate('/search-results', { state: { books: booksData } });
     } catch (error) {
+      setError('Failed to fetch book info');
       console.error('Error fetching books:', error);
     }
-  }
-
-  function handleSearch(e: React.FormEvent) {
-    e.preventDefault();
-    fetchBooks(query);
   }
 
   return (
@@ -72,6 +55,7 @@ export default function HomePage() {
               </form>
             </div>
           </div>
+          {error && <div className="error">{error}</div>}
         </div>
       </main>
     </>

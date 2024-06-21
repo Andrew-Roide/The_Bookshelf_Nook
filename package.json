@@ -46,6 +46,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
+    "node-fetch": "^3.3.2",
     "react-router-dom": "^6.23.1"
   }
 }

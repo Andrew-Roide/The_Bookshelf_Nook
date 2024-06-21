@@ -1,4 +1,4 @@
-import { BookInfo } from './BookInfo';
+import { BookInfo } from '../../shared/BookInfo';
 
 type SavedBooksProps = {
   savedBooks: BookInfo[];
@@ -35,7 +35,7 @@ export default function SavedBooks({ savedBooks }: SavedBooksProps) {
               </div>
             ))
           ) : (
-            <p>No results found.</p>
+            <p>No books found. Please add a book to view your bookshelf!</p>
           )}
         </div>
       </div>

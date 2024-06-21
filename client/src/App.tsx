@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { BookInfo } from './BookInfo';
+import { BookInfo } from '../../shared/BookInfo';
 import NavBar from './NavBar';
 import HomePage from './HomePage';
 import SearchResults from './SearchResults';

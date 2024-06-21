@@ -6,20 +6,23 @@ drop schema "public" cascade;
 
 create schema "public";
 
-CREATE TABLE "users" (
-  "userid" serial PRIMARY KEY,
-  "userName" text,
-  "hashedPassword" text,
-  "created_at" timestamp
-);
+-- CREATE TABLE "users" (
+--   "userid" serial PRIMARY KEY,
+--   "userName" text,
+--   "hashedPassword" text,
+--   "created_at" timestamp
+-- );
 
 CREATE TABLE "savedBooks" (
   "bookid" serial PRIMARY KEY,
-  "bookImg" text,
+  "bookImage" text,
   "bookTitle" text,
   "bookAuthor" text,
   "numOfPages" integer,
-  "ISBN" integer
+  "ISBN" text
 );
 
-ALTER TABLE "savedBooks" ADD FOREIGN KEY ("bookid") REFERENCES "users" ("userid");
+ALTER TABLE "savedBooks"
+-- ADD CONSTRAINT "fk_savedBooks_users"
+-- FOREIGN KEY ("bookid")
+-- REFERENCES "users" ("userid");
