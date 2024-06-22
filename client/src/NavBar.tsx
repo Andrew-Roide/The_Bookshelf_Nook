@@ -15,7 +15,7 @@ export default function NavBar() {
                   Find A Book
                 </Link>
                 <Link to="/saved-books" className="navbar-link">
-                  Your Bookshelf
+                  Your Booknook
                 </Link>
               </nav>
             </div>

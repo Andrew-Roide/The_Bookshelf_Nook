@@ -5,12 +5,17 @@ import { addBook } from './data';
 
 export default function SearchResults() {
   const [error, setError] = useState<string | null>(null);
+  const [confirmationMessage, setConfirmationMessage] = useState<string | null>(
+    null
+  );
   const location = useLocation();
   const books = location.state?.books as BookInfo[];
 
   async function handleAddBook(book: BookInfo) {
     try {
       await addBook(book);
+      setConfirmationMessage('Book added to your Booknook!');
+      setTimeout(() => setConfirmationMessage(null), 3000);
     } catch (error) {
       setError('Failed to add book to library');
     }
@@ -20,6 +25,12 @@ export default function SearchResults() {
       <div>
         <div>
           <h2>Search Results</h2>
+        </div>
+        <div>
+          {confirmationMessage && (
+            <div className="confirmation-message">{confirmationMessage}</div>
+          )}
+          {error && <div className="error-message">{error}</div>}
         </div>
         <div className="search-results-list">
           {books ? (

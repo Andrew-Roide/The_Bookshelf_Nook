@@ -45,3 +45,15 @@ export async function addBook(book: BookInfo): Promise<BookInfo> {
   if (!res.ok) throw new Error(`Fetch Error ${res.status}`);
   return await res.json();
 }
+
+export default async function getSavedBooks(): Promise<BookInfo[]> {
+  const req = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const res = await fetch('/api/savedBooks', req);
+  if (!res.ok) throw new Error(`Fetch Error ${res.status}`);
+  return await res.json();
+}

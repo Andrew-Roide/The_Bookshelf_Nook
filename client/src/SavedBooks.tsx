@@ -1,11 +1,36 @@
 import { BookInfo } from '../../shared/BookInfo';
+import { useState, useEffect } from 'react';
+import getSavedBooks from './data';
 
-type SavedBooksProps = {
-  savedBooks: BookInfo[];
-  onDeleteBook: (ISBN: string) => void;
-};
+export default function SavedBooks() {
+  const [isLoading, setIsLoading] = useState<boolean>();
+  const [savedBooks, setSavedBooks] = useState<BookInfo[]>([]);
+  const [error, setError] = useState<unknown>();
 
-export default function SavedBooks({ savedBooks }: SavedBooksProps) {
+  useEffect(() => {
+    async function load() {
+      setIsLoading(true);
+      try {
+        const Books = await getSavedBooks();
+        setSavedBooks(Books);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    if (isLoading === undefined) load();
+  }, [isLoading]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error)
+    return (
+      <div>
+        Error loading entries:
+        {error instanceof Error ? error.message : 'Unknown Error'}
+      </div>
+    );
+
   return (
     <>
       <div>
