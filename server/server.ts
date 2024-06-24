@@ -22,16 +22,12 @@ app.use(express.static(reactStaticDir));
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
 
-app.get('/api/savedBooks', async (req, res, next) => {
+app.get('/api/savedBooks/', async (req, res, next) => {
   try {
     const sql = `
-      select "savedBooks"."bookImage",
-             "savedBooks"."bookTitle",
-             "savedBooks"."bookAuthor",
-             "savedBooks"."numOfPages",
-             "savedBooks"."ISBN"
+      select *
         from "savedBooks"
-        order by "savedBooks"."bookid" desc;
+        order by "savedBooks"."bookId" desc;
     `;
     const result = await db.query(sql);
     res.status(200).json(result.rows);
@@ -42,17 +38,45 @@ app.get('/api/savedBooks', async (req, res, next) => {
 
 app.post('/api/savedBooks', async (req, res, next) => {
   try {
-    const { bookImage, bookTitle, bookAuthor, numOfPages, ISBN } =
+    const { googleBookId, bookImage, bookTitle, bookAuthor, numOfPages, ISBN } =
       req.body as Partial<BookInfo>;
 
     const sql = `
-      insert into "savedBooks" ("bookImage", "bookTitle", "bookAuthor", "numOfPages", "ISBN")
-      values ($1, $2, $3, $4, $5)
-      returning *
+      insert into "savedBooks" ( "googleBookId", "bookImage", "bookTitle", "bookAuthor", "numOfPages", "ISBN")
+      values ($1, $2, $3, $4, $5, $6)
+      returning *;
     `;
-    const params = [bookImage, bookTitle, bookAuthor, numOfPages, ISBN];
+    const params = [
+      googleBookId,
+      bookImage,
+      bookTitle,
+      bookAuthor,
+      numOfPages,
+      ISBN,
+    ];
     const result = await db.query<BookInfo>(sql, params);
     res.status(201).json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.delete('/api/savedBooks/:bookId', async (req, res, next) => {
+  try {
+    const bookid = Number(req.params.bookId);
+    console.log(bookid);
+    if (!Number.isInteger(bookid)) {
+      throw new ClientError(400, 'bookId must be an integer');
+    }
+
+    const sql = `
+        delete from "savedBooks"
+          where "bookId" = $1
+          returning *;
+      `;
+    const params = [bookid];
+    const deleteBookId = await db.query(sql, params);
+    res.json(deleteBookId.rows[0]);
   } catch (error) {
     next(error);
   }

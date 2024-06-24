@@ -4,11 +4,13 @@ import { fetchBookInfo } from './data';
 
 export default function HomePage() {
   const [query, setQuery] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>();
+  const [isLoading, setIsLoading] = useState<boolean>();
   const navigate = useNavigate();
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const booksData = await fetchBookInfo(query);
       setError(null);
@@ -16,8 +18,19 @@ export default function HomePage() {
     } catch (error) {
       setError('Failed to fetch book info');
       console.error('Error fetching books:', error);
+    } finally {
+      setIsLoading(false);
     }
   }
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error)
+    return (
+      <div>
+        Error loading entries:
+        {error instanceof Error ? error.message : 'Unknown Error'}
+      </div>
+    );
 
   return (
     <>
