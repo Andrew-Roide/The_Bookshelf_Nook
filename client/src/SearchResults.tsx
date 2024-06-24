@@ -13,6 +13,15 @@ export default function SearchResults() {
 
   async function handleAddBook(book: BookInfo) {
     try {
+      const alreadyExists = books.some(
+        (book) => book.googleBookId === book.googleBookId
+      );
+      if (alreadyExists) {
+        setConfirmationMessage('This book is already in your Booknook!');
+        setTimeout(() => setConfirmationMessage(null), 3000);
+        return;
+      }
+
       await addBook(book);
       setConfirmationMessage('Book added to your Booknook!');
       setTimeout(() => setConfirmationMessage(null), 3000);
@@ -20,6 +29,7 @@ export default function SearchResults() {
       setError('Failed to add book to library');
     }
   }
+
   return (
     <>
       <div>
@@ -35,7 +45,7 @@ export default function SearchResults() {
         <div className="search-results-list">
           {books ? (
             books.map((book) => (
-              <div key={book.ISBN} className="book-display-info">
+              <div key={book.googleBookId} className="book-display-info">
                 <div className="book-image">
                   <img
                     className="book-img-preview"

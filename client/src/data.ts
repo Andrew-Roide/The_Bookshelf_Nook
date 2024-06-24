@@ -15,6 +15,7 @@ export async function fetchBookInfo(query: string): Promise<BookInfo[]> {
     const data = await response.json();
 
     const booksData: BookInfo[] = data.items.map((item: any) => ({
+      googleBookId: item.id,
       bookImage: item.volumeInfo.imageLinks?.thumbnail || '',
       bookTitle: item.volumeInfo.title || '',
       bookAuthor: item.volumeInfo.authors
@@ -56,4 +57,15 @@ export default async function getSavedBooks(): Promise<BookInfo[]> {
   const res = await fetch('/api/savedBooks', req);
   if (!res.ok) throw new Error(`Fetch Error ${res.status}`);
   return await res.json();
+}
+
+export async function deleteBookId(bookId: number) {
+  const req = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const res = await fetch(`/api/savedBooks/${bookId}`, req);
+  console.log(await res.json());
 }
