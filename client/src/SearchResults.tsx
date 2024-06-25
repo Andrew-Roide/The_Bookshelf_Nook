@@ -13,15 +13,6 @@ export default function SearchResults() {
 
   async function handleAddBook(book: BookInfo) {
     try {
-      const alreadyExists = books.some(
-        (book) => book.googleBookId === book.googleBookId
-      );
-      if (alreadyExists) {
-        setConfirmationMessage('This book is already in your Booknook!');
-        setTimeout(() => setConfirmationMessage(null), 3000);
-        return;
-      }
-
       await addBook(book);
       setConfirmationMessage('Book added to your Booknook!');
       setTimeout(() => setConfirmationMessage(null), 3000);
@@ -32,7 +23,7 @@ export default function SearchResults() {
 
   return (
     <>
-      <div>
+      <div className="bg-customLightGreen min-h-screen">
         <div>
           <h2>Search Results</h2>
         </div>

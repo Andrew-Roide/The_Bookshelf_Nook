@@ -24,14 +24,12 @@ export default function SavedBooks() {
     if (isLoading === undefined) load();
   }, [isLoading]);
 
-  async function handleDelete() {
+  async function handleDelete(bookId: number) {
     if (!bookToDelete) return;
     try {
       setIsLoading(true);
-      await deleteBookId(bookToDelete.bookId);
-      setSavedBooks(
-        savedBooks.filter((book) => book.bookId !== bookToDelete.bookId)
-      );
+      await deleteBookId(bookId);
+      setSavedBooks(savedBooks.filter((book) => book.bookId !== bookId));
       setBookToDelete(null);
     } catch (error) {
       alert(`Error deleting Book: ${error}`);
@@ -58,9 +56,9 @@ export default function SavedBooks() {
 
   return (
     <>
-      <div>
+      <div className="bg-customLightGreen min-h-screen">
         <div>
-          <h2>Your Booknook</h2>
+          <h2 className="">Your Booknook</h2>
         </div>
         <div className="search-results-list">
           {savedBooks.length > 0 ? (
@@ -95,18 +93,18 @@ export default function SavedBooks() {
         </div>
       </div>
       {bookToDelete && (
-        <div className="modal-container d-flex justify-center align-center">
-          <div className="modal row">
-            <div className="column-full d-flex justify-center">
+        <div className="">
+          <div className="">
+            <div className="">
               <p>Are you sure you want to delete this book?</p>
             </div>
-            <div className="column-full d-flex justify-between">
+            <div className="">
               <button className="modal-button" onClick={closeDeleteModal}>
                 Cancel
               </button>
               <button
-                className="modal-button red-background white-text"
-                onClick={handleDelete}>
+                className=""
+                onClick={() => handleDelete(bookToDelete.bookId)}>
                 Confirm
               </button>
             </div>
