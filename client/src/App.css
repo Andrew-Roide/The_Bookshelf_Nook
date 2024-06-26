@@ -1,0 +1,12 @@
+#root {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+body {
+  background-color: #ece3ce;
+}
+
+button:active {
+  transform: translateY(2px);
+}
