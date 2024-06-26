@@ -100,25 +100,36 @@ export default function SavedBooks() {
               </div>
             ))
           ) : (
-            <p>No books found. Please add a book to view your bookshelf!</p>
+            <p className="m-8 p-3 confirmation-message text-customBrown text-2xl font-slab font-bold text-shadow-custom text-center">
+              No books found. Please add a book to view your bookshelf!
+            </p>
           )}
         </div>
       </div>
       {bookToDelete && (
-        <div className="">
-          <div className="">
-            <div className="">
-              <p>Are you sure you want to delete this book?</p>
-            </div>
-            <div className="">
-              <button className="modal-button" onClick={closeDeleteModal}>
-                Cancel
-              </button>
-              <button
-                className=""
-                onClick={() => handleDelete(bookToDelete.bookId)}>
-                Confirm
-              </button>
+        <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+          <div className="relative w-auto my-6 mx-auto max-w-3xl">
+            <div className="border-0 rounded-lg shadow-lg relative flex flex-col text-center w-full bg-customBrown outline-none focus:outline-none">
+              <div className="p-5 border-b border-solid">
+                <h3 className="text-3xl font-semibold">Delete Book?</h3>
+              </div>
+              <div className="relative p-6 flex-auto">
+                <p className="m-4 text-lg">
+                  Are you sure you would like to delete this book?
+                </p>
+              </div>
+              <div className="flex items-center justify-center p-6 border-t border-solid border-blueGray-200 rounded-b">
+                <button
+                  className="modal-button-cancel text-red-500 font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  onClick={closeDeleteModal}>
+                  Cancel
+                </button>
+                <button
+                  className="modal-button-confirm active:bg-customGreen font-bold uppercase text-sm px-6 py-3 rounded hover:shadow-lg hover:bg-customLightGreen outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                  onClick={() => handleDelete(bookToDelete.bookId)}>
+                  Confirm
+                </button>
+              </div>
             </div>
           </div>
         </div>
