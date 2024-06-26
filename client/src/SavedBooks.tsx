@@ -56,30 +56,42 @@ export default function SavedBooks() {
 
   return (
     <>
-      <div className="bg-customLightGreen min-h-screen">
-        <div>
-          <h2 className="">Your Booknook</h2>
+      <div className="bg-customLightGreen rounded-xl min-h-screen flex flex-col p-6">
+        <div className="m-10 text-customBrown text-4xl font-slab font-bold text-shadow-custom text-end">
+          <h2>Your Booknook</h2>
         </div>
-        <div className="search-results-list">
+        <div className="saved-books-list flex flex-wrap items-center justify-center gap-5vw">
           {savedBooks.length > 0 ? (
             savedBooks.map((book) => (
-              <div key={book.googleBookId} className="book-display-info">
+              <div
+                key={book.googleBookId}
+                className="book-display-info flex justify-around">
                 <div className="book-image">
                   <img
-                    className="book-img-preview"
-                    src={book.bookImage}
+                    className="book-img-preview w-6vw"
+                    src={
+                      book.bookImage ? book.bookImage : 'default-image-url.png'
+                    }
                     alt={book.bookTitle}
                   />
                 </div>
-                <div className="book-information">
-                  <div className="book-title">{book.bookTitle}</div>
-                  <div className="book-author">{book.bookAuthor}</div>
-                  <div className="book-num-pages">{book.numOfPages} pages</div>
-                  <div className="book-ISBN">ISBN_13: {book.ISBN}</div>
+                <div className="book-information w-80 ml-4 text-customBrown text-shadow-customNav leading-8 text-lg font-sans">
+                  <div className="book-title italic font-bold">
+                    {book.bookTitle ? book.bookTitle : 'Title Not Available'}
+                  </div>
+                  <div className="book-author">
+                    {book.bookAuthor ? book.bookAuthor : 'Author Not Available'}
+                  </div>
+                  <div className="book-num-pages">
+                    Pages {book.numOfPages ? book.numOfPages : 'Not Available'}{' '}
+                  </div>
+                  <div className="book-ISBN">
+                    ISBN_13: {book.ISBN ? book.ISBN : 'ISBN Not Available'}
+                  </div>
                 </div>
-                <div className="add-book-btn-container">
+                <div className="delete-book-btn-container flex flex-col-reverse">
                   <button
-                    className="add-book-btn"
+                    className="delete-book-btn bg-customGreen text-customBrown text-shadow-custom text-center shadow-md drop-shadow-2xl rounded p-1"
                     onClick={() => openDeleteModal(book)}>
                     {' '}
                     Delete Book{' '}

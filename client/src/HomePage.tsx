@@ -35,7 +35,7 @@ export default function HomePage() {
   return (
     <>
       <main>
-        <div className="bg-customLightGreen min-h-screen flex flex-col items-center p-6">
+        <div className="bg-customLightGreen rounded-xl min-h-screen flex flex-col items-center p-6">
           <div className="m-10 text-customBrown text-4xl font-slab font-bold text-shadow-custom">
             <h2>Search A Book</h2>
           </div>
