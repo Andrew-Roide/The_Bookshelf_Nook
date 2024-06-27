@@ -6,15 +6,16 @@ drop schema "public" cascade;
 
 create schema "public";
 
--- CREATE TABLE "users" (
---   "userId" serial PRIMARY KEY,
---   "userName" text,
---   "hashedPassword" text,
---   "created_at" timestamp
--- );
+CREATE TABLE "public"."users" (
+  "userId" serial PRIMARY KEY,
+  "username" text,
+  "hashedPassword" text,
+  "created_at" timestamp DEFAULT (now())
+);
 
-CREATE TABLE "savedBooks" (
+CREATE TABLE "public"."savedBooks" (
   "bookId" serial PRIMARY KEY,
+  "userId" integer,
   "googleBookId" text,
   "bookImage" text,
   "bookTitle" text,
@@ -23,7 +24,8 @@ CREATE TABLE "savedBooks" (
   "ISBN" text
 );
 
-ALTER TABLE "savedBooks"
--- ADD CONSTRAINT "fk_savedBooks_users"
--- FOREIGN KEY ("bookId")
--- REFERENCES "users" ("userId");
+ALTER TABLE "public"."savedBooks"
+ADD CONSTRAINT "fk_savedBooks_users"
+FOREIGN KEY ("userId")
+REFERENCES "public"."users" ("userId")
+ON DELETE CASCADE;

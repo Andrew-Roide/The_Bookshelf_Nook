@@ -1,15 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- Remove when used */
 import 'dotenv/config';
 import express from 'express';
+import argon2 from 'argon2';
 import pg from 'pg';
+import jwt from 'jsonwebtoken';
 import { ClientError, errorMiddleware } from './lib/index.js';
 import { BookInfo } from '../shared/BookInfo.js';
+import { User } from '../shared/User.js';
+import { Auth } from '../shared/Auth.js';
+
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
   },
 });
+
+const hashKey = process.env.TOKEN_SECRET;
+if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
 
 const app = express();
 
@@ -21,6 +29,29 @@ app.use(express.static(reactStaticDir));
 // Static directory for file uploads server/public/
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
+
+app.post('/api/auth/sign-up', async (req, res, next) => {
+  try {
+    const { username, password } = req.body as Partial<Auth>;
+    console.log('Username:', username, 'Password:', password);
+    if (!username || !password) {
+      throw new ClientError(400, 'username and password are required fields');
+    }
+    const hashPassword = await argon2.hash(password);
+
+    const sql = `
+      insert into "users" ("username", "hashedPassword")
+      values ($1, $2)
+      returning *
+    `;
+    const params = [username, hashPassword];
+    const result = await db.query<User>(sql, params);
+    const [user] = result.rows;
+    res.status(201).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.get('/api/savedBooks/', async (req, res, next) => {
   try {
