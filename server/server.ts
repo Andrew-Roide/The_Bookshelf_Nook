@@ -32,11 +32,13 @@ app.use(express.json());
 
 app.post('/api/auth/sign-up', async (req, res, next) => {
   try {
-    const { username, hashedPassword } = req.body as Partial<Auth>;
-    if (!username || !hashedPassword) {
+    const { username, password } = req.body as Partial<Auth>;
+    console.log('Username:', username, 'Password:', password);
+    if (!username || !password) {
       throw new ClientError(400, 'username and password are required fields');
     }
-    const hashPassword = await argon2.hash(hashedPassword);
+    const hashPassword = await argon2.hash(password);
+
     const sql = `
       insert into "users" ("username", "hashedPassword")
       values ($1, $2)

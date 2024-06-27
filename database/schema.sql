@@ -10,7 +10,7 @@ CREATE TABLE "public"."users" (
   "userId" serial PRIMARY KEY,
   "username" text,
   "hashedPassword" text,
-  "created_at" timestamp
+  "created_at" timestamp DEFAULT (now())
 );
 
 CREATE TABLE "public"."savedBooks" (
