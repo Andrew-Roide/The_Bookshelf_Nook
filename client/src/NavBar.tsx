@@ -18,6 +18,7 @@ export default function NavBar() {
               <Link to="/saved-books" className="navbar-link">
                 Your Booknook
               </Link>
+              <Link to="/register">Register</Link>
             </nav>
           </div>
         </div>
