@@ -4,6 +4,7 @@ import HomePage from './HomePage';
 import SearchResults from './SearchResults';
 import SavedBooks from './SavedBooks';
 import RegistrationForm from './RegistrationForm';
+import SignInForm from './SignInForm';
 import './App.css';
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/search-results" element={<SearchResults />} />
           <Route path="/saved-books" element={<SavedBooks />} />
           <Route path="/register" element={<RegistrationForm />} />
+          <Route path="/sign-in" element={<SignInForm />} />
         </Routes>
       </Router>
     </>

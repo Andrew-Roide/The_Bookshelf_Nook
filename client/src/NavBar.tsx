@@ -19,6 +19,7 @@ export default function NavBar() {
                 Your Booknook
               </Link>
               <Link to="/register">Register</Link>
+              <Link to="/sign-in">Sign In</Link>
             </nav>
           </div>
         </div>

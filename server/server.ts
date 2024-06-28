@@ -53,6 +53,41 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
   }
 });
 
+app.post('/api/auth/sign-in', async (req, res, next) => {
+  try {
+    const { username, password } = req.body as Partial<Auth>;
+    if (!username || !password) {
+      throw new ClientError(401, 'invalid login');
+    }
+
+    const sql = `
+    select "userId", "hashedPassword"
+      from "users"
+      where "username" = $1;
+    `;
+    const params = [username];
+    const result = await db.query(sql, params);
+    if (result.rows.length === 0) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const { userId, hashedPassword } = result.rows[0];
+    const passwordMatch = await argon2.verify(hashedPassword, password); // compares the provided plaintext password with the hashed password (hashedPassword) stored in the database. It does so by hashing the provided password and comparing the resulting hash with the stored hash.
+    if (!passwordMatch) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const payload = { userId, username };
+    const token = jwt.sign(payload, hashKey);
+    res.status(200).json({ payload, token });
+
+    /* In a scenario where two users have the same password and you've verified the password successfully, you would typically use additional user information, such as userId and username, to distinguish between the users.
+      Once you've verified the password, you can create a JSON Web Token (JWT) containing information about the authenticated user, such as their userId and username, and then use this token for subsequent authenticated requests.
+      ***JWT token can be stored in various places like HTTP Headers and Cookies***
+    */
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.get('/api/savedBooks/', async (req, res, next) => {
   try {
     const sql = `
