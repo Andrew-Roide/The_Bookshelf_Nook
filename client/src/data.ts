@@ -39,6 +39,7 @@ export async function addBook(book: BookInfo): Promise<BookInfo> {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
     },
     body: JSON.stringify(book),
   };
@@ -52,6 +53,7 @@ export default async function getSavedBooks(): Promise<BookInfo[]> {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
     },
   };
   const res = await fetch('/api/savedBooks', req);
@@ -64,6 +66,7 @@ export async function deleteBookId(bookId: number) {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
     },
   };
   const res = await fetch(`/api/savedBooks/${bookId}`, req);

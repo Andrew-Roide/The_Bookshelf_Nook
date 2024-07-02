@@ -8,6 +8,12 @@ export default function SavedBooks() {
   const [savedBooks, setSavedBooks] = useState<BookInfo[]>([]);
   const [error, setError] = useState<unknown>();
   const [bookToDelete, setBookToDelete] = useState<BookInfo | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, []);
 
   useEffect(() => {
     async function load() {
@@ -43,6 +49,16 @@ export default function SavedBooks() {
 
   function closeDeleteModal() {
     setBookToDelete(null);
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="bg-customLightGreen rounded-xl min-h-screen flex flex-col p-6">
+        <div className="m-10 text-customBrown text-4xl font-slab font-bold text-shadow-custom text-center">
+          <p>Please Sign in or Register to add books to your Booknook.</p>
+        </div>
+      </div>
+    );
   }
 
   if (isLoading) return <div>Loading...</div>;
