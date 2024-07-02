@@ -17,7 +17,7 @@ export default function SearchResults() {
       setConfirmationMessage('Book added to your Booknook!');
       setTimeout(() => setConfirmationMessage(null), 4000);
     } catch (error) {
-      setError('Failed to add book to library');
+      setError('Please Sign in or Register to add books to your Booknook');
     }
   }
 

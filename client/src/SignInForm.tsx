@@ -1,7 +1,15 @@
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useState, useEffect } from 'react';
 
 export default function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,12 +27,24 @@ export default function SignInForm() {
         throw new Error(`fetch Error ${res.status}`);
       }
       const { user, token } = await res.json();
+      sessionStorage.setItem('token', token);
+      setIsLoggedIn(true);
       console.log('Signed In', user, '; received token:', token);
     } catch (err) {
       alert(`Error signing in: ${err}`);
     } finally {
       setIsLoading(false);
     }
+  }
+
+  if (isLoggedIn) {
+    return (
+      <div className="bg-customLightGreen rounded-xl min-h-screen flex flex-col p-6">
+        <div className="m-10 text-customBrown text-4xl font-slab font-bold text-shadow-custom text-center">
+          <p>You are already signed in! Get to adding books!</p>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -4,7 +4,7 @@ import express from 'express';
 import argon2 from 'argon2';
 import pg from 'pg';
 import jwt from 'jsonwebtoken';
-import { ClientError, errorMiddleware } from './lib/index.js';
+import { ClientError, errorMiddleware, authMiddleware } from './lib/index.js';
 import { BookInfo } from '../shared/BookInfo.js';
 import { User } from '../shared/User.js';
 import { Auth } from '../shared/Auth.js';
@@ -33,7 +33,7 @@ app.use(express.json());
 app.post('/api/auth/sign-up', async (req, res, next) => {
   try {
     const { username, password } = req.body as Partial<Auth>;
-    console.log('Username:', username, 'Password:', password);
+
     if (!username || !password) {
       throw new ClientError(400, 'username and password are required fields');
     }
@@ -56,6 +56,7 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
 app.post('/api/auth/sign-in', async (req, res, next) => {
   try {
     const { username, password } = req.body as Partial<Auth>;
+
     if (!username || !password) {
       throw new ClientError(401, 'invalid login');
     }
@@ -66,53 +67,54 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
       where "username" = $1;
     `;
     const params = [username];
-    const result = await db.query(sql, params);
-    if (result.rows.length === 0) {
+    const result = await db.query<User>(sql, params);
+    const { userId, hashedPassword } = result.rows[0];
+
+    if (!(await argon2.verify(hashedPassword, password))) {
       throw new ClientError(401, 'invalid login');
     }
-    const { userId, hashedPassword } = result.rows[0];
-    const passwordMatch = await argon2.verify(hashedPassword, password); // compares the provided plaintext password with the hashed password (hashedPassword) stored in the database. It does so by hashing the provided password and comparing the resulting hash with the stored hash.
+
+    const passwordMatch = await argon2.verify(hashedPassword, password);
+
     if (!passwordMatch) {
       throw new ClientError(401, 'invalid login');
     }
     const payload = { userId, username };
     const token = jwt.sign(payload, hashKey);
-    res.status(200).json({ payload, token });
-
-    /* In a scenario where two users have the same password and you've verified the password successfully, you would typically use additional user information, such as userId and username, to distinguish between the users.
-      Once you've verified the password, you can create a JSON Web Token (JWT) containing information about the authenticated user, such as their userId and username, and then use this token for subsequent authenticated requests.
-      ***JWT token can be stored in various places like HTTP Headers and Cookies***
-    */
+    console.log('Signed In:', username, '; Received token:', token);
+    res.status(200).json({ token, user: payload });
   } catch (err) {
     next(err);
   }
 });
 
-app.get('/api/savedBooks/', async (req, res, next) => {
+app.get('/api/savedBooks/', authMiddleware, async (req, res, next) => {
   try {
     const sql = `
       select *
         from "savedBooks"
+        where "userId" = $1
         order by "savedBooks"."bookId" desc;
     `;
-    const result = await db.query(sql);
+    const result = await db.query<User>(sql, [req.user?.userId]);
     res.status(200).json(result.rows);
   } catch (error) {
     next(error);
   }
 });
 
-app.post('/api/savedBooks', async (req, res, next) => {
+app.post('/api/savedBooks', authMiddleware, async (req, res, next) => {
   try {
     const { googleBookId, bookImage, bookTitle, bookAuthor, numOfPages, ISBN } =
       req.body as Partial<BookInfo>;
 
     const sql = `
-      insert into "savedBooks" ( "googleBookId", "bookImage", "bookTitle", "bookAuthor", "numOfPages", "ISBN")
-      values ($1, $2, $3, $4, $5, $6)
+      insert into "savedBooks" ("userId", "googleBookId", "bookImage", "bookTitle", "bookAuthor", "numOfPages", "ISBN")
+      values ($1, $2, $3, $4, $5, $6, $7)
       returning *;
     `;
     const params = [
+      req.user?.userId,
       googleBookId,
       bookImage,
       bookTitle,
@@ -127,26 +129,29 @@ app.post('/api/savedBooks', async (req, res, next) => {
   }
 });
 
-app.delete('/api/savedBooks/:bookId', async (req, res, next) => {
-  try {
-    const bookid = Number(req.params.bookId);
-    console.log(bookid);
-    if (!Number.isInteger(bookid)) {
-      throw new ClientError(400, 'bookId must be an integer');
-    }
+app.delete(
+  '/api/savedBooks/:bookId',
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const bookId = Number(req.params.bookId);
+      if (!Number.isInteger(bookId)) {
+        throw new ClientError(400, 'bookId must be an integer');
+      }
 
-    const sql = `
+      const sql = `
         delete from "savedBooks"
-          where "bookId" = $1
+          where "bookId" = $1 and "userId" = $2
           returning *;
       `;
-    const params = [bookid];
-    const deleteBookId = await db.query(sql, params);
-    res.json(deleteBookId.rows[0]);
-  } catch (error) {
-    next(error);
+      const params = [bookId, req.user?.userId];
+      const deleteBookId = await db.query(sql, params);
+      res.json(deleteBookId.rows[0]);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 /*
  * Handles paths that aren't handled by any other route handler.
