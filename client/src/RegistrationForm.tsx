@@ -92,7 +92,7 @@ export default function RegistrationForm() {
             </label>
           </div>
         </div>
-        <div className="row">
+        <div>
           <div className="column-full d-flex justify-between">
             <button
               disabled={isLoading}
