@@ -4,7 +4,7 @@ import { fetchBookInfo } from './data';
 
 export default function HomePage() {
   const [query, setQuery] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>();
   const navigate = useNavigate();
 
