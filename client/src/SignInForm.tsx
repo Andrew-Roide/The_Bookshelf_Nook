@@ -34,7 +34,9 @@ export default function SignInForm() {
       console.log('Signed In', user, '; received token:', token);
       navigate('/');
     } catch (err) {
-      alert(`Error signing in: ${err}`);
+      alert(
+        `Error signing in: No account registered under that username or password!`
+      );
     } finally {
       setIsLoading(false);
     }
