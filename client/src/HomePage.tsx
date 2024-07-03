@@ -42,7 +42,7 @@ export default function HomePage() {
           <div className="text-customBrown text-2xl font-slab font-bold text-shadow-custom max-w-lg text-center my-8">
             <p>
               Discover Your Favorite Books and Authors: Your Next Read Awaits!
-              Find, Explore, and Add to Your Book Nook with Ease.
+              Find, Explore, and Add to Your Booknook with Ease.
             </p>
           </div>
           <div className="m-8 w-full">
