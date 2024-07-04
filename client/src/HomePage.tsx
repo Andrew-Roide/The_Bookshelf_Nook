@@ -55,7 +55,7 @@ export default function HomePage() {
                   <input
                     type="text"
                     name="search"
-                    className="rounded bg-gray-100 pl-2 w-96"
+                    className="rounded bg-gray-100 pl-2 w-full sm:w-80 md:w-96"
                     placeholder="search your book"
                     onChange={(e) => setQuery(e.target.value)}
                     required

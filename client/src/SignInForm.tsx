@@ -72,7 +72,7 @@ export default function SignInForm() {
                 name="username"
                 placeholder="username"
                 type="text"
-                className="shadow-md drop-shadow-2xl rounded bg-gray-100 pl-2 w-96"
+                className="shadow-md drop-shadow-2xl rounded bg-gray-100 pl-2 w-full sm:w-80 md:w-96"
               />
             </label>
             <label className="p-6">
@@ -84,7 +84,7 @@ export default function SignInForm() {
                 name="password"
                 type="password"
                 placeholder="password"
-                className="shadow-md drop-shadow-2xl rounded bg-gray-100 pl-2 w-96"
+                className="shadow-md drop-shadow-2xl rounded bg-gray-100 pl-2 w-full sm:w-80 md:w-96"
               />
             </label>
           </div>
